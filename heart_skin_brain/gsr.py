@@ -5,7 +5,7 @@ sys.path.append(os.environ.get('PYTHONPATH', ''))
 import serial
 
 # serial port obtained via Arduino board
-ser = serial.Serial('COM3')
+ser = serial.Serial('COM4')
 ser.flushInput()
 
 
