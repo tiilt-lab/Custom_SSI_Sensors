@@ -69,4 +69,4 @@ EEG with ECG, GSR:
 
 EEG with PPG, GSR AND AUDIOVISUAL:
            
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/tBMmrahfTf8/0.jpg)](http://www.youtube.com/watch?v=tBMmrahfTf8 "EEG,ECG,GSR Signals on SSI")
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/DqONgXAobW8/0.jpg)](http://www.youtube.com/watch?v=DqONgXAobW8 "EEG,PPG,GSR, VIDEO Signals on SSI")
