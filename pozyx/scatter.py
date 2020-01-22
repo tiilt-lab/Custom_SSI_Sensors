@@ -6,9 +6,9 @@ import os
 # court size: 15843mm (y) x 27127mm (x)
 
 # TODO find better way to do colors
-colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
-xbounds = [-10000, 10000]
-ybounds = [-10000, 10000]
+colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w',]
+xbounds = [-5000, 20000]
+ybounds = [-5000, 15000]
 
 
 # try 13, 20-22

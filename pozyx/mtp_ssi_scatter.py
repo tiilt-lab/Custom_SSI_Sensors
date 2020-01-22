@@ -7,13 +7,13 @@ import os
 
 # TODO find better way to do colors
 colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
-xbounds = [-1000, 8500]
-ybounds = [-1000, 6500]
+xbounds = [-1000, 8000]
+ybounds = [-1000, 8000]
 flag = True
 
 fig = ""
 ids = {}
-trail = 5
+trail = 15
 ax_list = []
 print("GLOBALS INITIALIZED")
 
@@ -103,18 +103,25 @@ def main(dataset):
     plt.xlim(xbounds[0], xbounds[1])
     plt.ylim(ybounds[0], ybounds[1])
 
-    avg_x = sum(ids[lineid]['x']) / len(ids[lineid]['x'])
-    avg_y = sum(ids[lineid]['y']) / len(ids[lineid]['y'])
+    # avg_x = sum(ids[lineid]['x']) / len(ids[lineid]['x'])
+    # avg_y = sum(ids[lineid]['y']) / len(ids[lineid]['y'])
 
     for ilineid in ids.keys():
         ax_list[list(ids.keys()).index(ilineid)].scatter(
             ids[ilineid]['x'],
             ids[ilineid]['y'],
-            # [avg_x],
-            # [avg_y],
+            # sum(ids[ilineid]['x']) / len(ids[ilineid]['x']),
+            # sum(ids[ilineid]['y']) / len(ids[ilineid]['y']),
             color=colors[list(ids.keys()).index(ilineid)],
             label=ilineid)
         ax_list[list(ids.keys()).index(ilineid)].legend(loc='best')
+
+    for ilineid in ids.keys():
+        plt.axes().scatter(
+            sum(ids[ilineid]['x']) / len(ids[ilineid]['x']), 
+            sum(ids[ilineid]['y']) / len(ids[ilineid]['y']), 
+            color='k', 
+            label='means')
 
     fig.canvas.draw_idle()
     plt.pause(0.000000001)

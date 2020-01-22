@@ -246,14 +246,24 @@ locations = {
                    DeviceCoordinates(0x695f, 1, Coordinates(7500, 0, 2500))],
 
     'conference_room' : [DeviceCoordinates(0x694e, 1, Coordinates(0, 0, 2000)), # the origin
-                            DeviceCoordinates(0x6707, 1, Coordinates(0, 5000, 2000)),
-                            DeviceCoordinates(0x6e50, 1, Coordinates(13500, 5000, 2000)),
-                            DeviceCoordinates(0x676e, 1, Coordinates(13500, 0, 2000))],
+                         DeviceCoordinates(0x6707, 1, Coordinates(0, 5000, 2000)),
+                         DeviceCoordinates(0x6e50, 1, Coordinates(13500, 5000, 2000)),
+                         DeviceCoordinates(0x676e, 1, Coordinates(13500, 0, 2000))],
 
-    'fleetwood-jourdain' : [DeviceCoordinates(0x6956, 1, Coordinates(0, 0, 2362)), # the origin
+    'fleetwood_jourdain' : [DeviceCoordinates(0x6956, 1, Coordinates(0, 0, 2362)), # the origin
                             DeviceCoordinates(0x6e71, 1, Coordinates(0, 15850, 2362)),
                             DeviceCoordinates(0x6767, 1, Coordinates(27127, 15850, 2362)),
                             DeviceCoordinates(0x676e, 1, Coordinates(27127, 0, 2362))],
+
+    'family_focus' : [DeviceCoordinates(0x6767, 1, Coordinates(0, 0, 2133)), # the origin
+                      DeviceCoordinates(0x6e71, 1, Coordinates(0, 12800, 2133)),
+                      DeviceCoordinates(0x676e, 1, Coordinates(10668, 12800, 2133)),
+                      DeviceCoordinates(0x6956, 1, Coordinates(10668, 0, 2362))],
+
+    'annenburg_101' : [DeviceCoordinates(0x6767, 1, Coordinates(0, 0, 2000)), # the origin
+                       DeviceCoordinates(0x6e71, 1, Coordinates(0, 5080, 2000)),
+                       DeviceCoordinates(0x676e, 1, Coordinates(7085, 5080, 2000)),
+                       DeviceCoordinates(0x6956, 1, Coordinates(7085, 0, 2000))],
 }
 
 
@@ -278,9 +288,10 @@ def connect(opts, vars):
 
 
     # IDs of the tags to position, add None to position the local tag as well.
-    tag_ids = [0x6743]
-    #[0x675c, 0x0212, 0x6728, 0x6735, 0x6724, 0x6743, 0x6730, 0x6717, 0x6737, 0x675b] 
-    # 0x6e58, 0x0221, 0x694c, 0x6704, 0x6756 
+    tag_ids = [0x6a1b]
+    #[0x6724, 0x6a68, 0x6735, 0x6a67, 0x6a51, 0x6717, 0x6a1b, 0x6a03,0x6737]
+    # test
+    #mmla class [0x6724, 0x6a68, 0x6735, 0x6a67, 0x6a51, 0x6717, 0x6a1b, 0x6a03,0x6737]
 
     # necessary data for calibration
     anchors = locations['tiilt_lab']
