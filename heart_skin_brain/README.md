@@ -1,6 +1,8 @@
 # Heart, Brainwave, and Skin Conductance Sensors
 
-A Variety of physiological sensors to be used with [SSI](https://github.com/hcmlab/ssi). Sensors include the following:
+## OVERVIEW
+
+This is an application that sends a variety of multimodal physiological and audiovisual sensors to the [SSI](https://github.com/hcmlab/ssi) (Social Signal Interpretation) pipeline. Sensors include the following:
 
   * **GSR (Galvanic Skin Response)**
     * Refers to changes in sweat gland activity that are reflective of the intensity of our emotional state, otherwise known as emotional arousal.
@@ -17,7 +19,7 @@ A Variety of physiological sensors to be used with [SSI](https://github.com/hcml
   * **EEG with ECG, GSR**
   * **EEG with PPG, GSR**
 
-### OVERVIEW OF SOFTWARE AND HARDWARE REQUIRED
+### REQUIRED SOFTWARE AND HARDWARE 
 
 * **Hardware**: 
   * Arduino Board purchased [here](https://www.arduino.cc/en/Main/Boards) or on [Amazon](https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6). 
@@ -64,3 +66,7 @@ EEG with PPG, GSR:
 EEG with ECG, GSR:
            
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/tBMmrahfTf8/0.jpg)](http://www.youtube.com/watch?v=tBMmrahfTf8 "EEG,ECG,GSR Signals on SSI")
+
+EEG with PPG, GSR AND AUDIOVISUAL:
+           
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/DqONgXAobW8/0.jpg)](http://www.youtube.com/watch?v=DqONgXAobW8 "EEG,PPG,GSR, VIDEO Signals on SSI")
