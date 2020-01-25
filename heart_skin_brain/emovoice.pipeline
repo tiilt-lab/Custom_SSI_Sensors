@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-16" standalone="yes"?>
+<pipeline>
+	
+	<register>		
+		<load name="audio" depend="ssidialog.dll"/>
+		<load name="graphic" />				
+		<load name="model"/>		
+		<load name="ioput"/>		
+		<load name="ssipython"/>		
+		<load name="ssigraphic"/>
+		<load name="ssicamera"/>
+		<load name="ssicontrol"/>	
+		<load name="ffmpeg" depend="avcodec-57.dll;avutil-55.dll;postproc-54.dll;swresample-2.dll;swscale-4.dll;avdevice-57.dll;avfilter-6.dll;avformat-57.dll"/>	
+	</register>	
+	
+	<gate close="$(audio:loop)">
+		<framework waitid="reader"/>
+	</gate>
+	
+	<!-- audio sensor initialization -->
+	<gate open="$(audio:live)">
+		<sensor create="Audio" option="options/audio" sr="$(audio:sr)" scale="true">
+			<output channel="audio" pin="audio"/>		
+		</sensor>	
+	</gate>
+	<gate close="$(audio:live)">
+		<sensor create="WavReader:reader" path="$(audio:file)" blockInSamples="512" scale="true" loop="$(audio:loop)">
+			<output channel="audio" pin="audio"/>		
+		</sensor>	 
+	</gate>		
+		
+	<!-- activity detection -->
+	<transformer create="AudioActivity" option="data\chunks\activity">
+		<input pin="audio" frame="0.03s" delta="0.015s"/>
+		<output pin="vad"/>
+	</transformer>
+	<consumer create="TriggerEventSender" option="data\chunks\trigger" address="vad@audio" minDuration="1.0" incDuration="0.5" maxDuration="5.0">
+		<input pin="vad" frame="0.1s"/>
+	</consumer>	
+	
+	<!-- feature extraction -->
+	<consumer create="TupleEventSender" address="feature@audio">
+		<input pin="audio" address="vad@audio">
+			<transformer create="Chain" path="chains\$(model:chain)"/>
+		</input>
+	</consumer>
+	
+	<!-- classifier -->
+	<gate open="$(model:incremental)">		
+		<object create="Classifier" path="models\$(model:type).$(model:chain)" address="emotion-raw@audio">
+			<listen address="feature@audio"/>
+		</object>	
+		<object create="DecisionSmoother" address="emotion@audio" update="250" decay="0.01" speed="0.1" window="3.0" average="true">
+			<listen address="emotion-raw@audio"/>
+		</object>		
+	</gate>
+	<gate close="$(model:incremental)">
+		<object create="Classifier" path="models\$(model:type).$(model:chain)" address="emotion@audio">
+			<listen address="feature@audio" state="completed"/>
+		</object>	
+	</gate>
+	
+	<!-- event sender -->
+	<object create="XMLEventSender:monitor" address="emovoice@xml" path="emovoice.xml" monitor="true" mname="RESULT" console="false" update="100" coldelim=" ">
+		<listen address="emotion@audio"/>
+	</object>
+	
+	<!-- bar plots -->
+	<object create="EventPainter:eplot" title="EMOTION" type="1" fix="1.0" global="true" autoscale="false">
+		<listen address="emotion@audio"/>
+	</object>
+	
+	<object create="FileEventWriter" path="result">
+		<listen address="emotion@audio"/>
+	</object>
+	
+	<!-- visualization -->	
+	<consumer create="SignalPainter:plot" title="AUDIO - RAW" size="10" type="2" autoscale="false" fix="-1.0,1.0">
+		<input pin="audio" frame="0.02s"/>
+	</consumer>
+	<consumer create="SignalPainter:plot" title="AUDIO - ACTIVITY" size="10" type="0">
+		<input pin="vad" frame="0.02s"/>
+	</consumer>	
+	
+	<!-- wav output -->
+	<gate close="$(audio:live)">
+		<consumer create="AudioPlayer" option="options\aplayer">
+			<input pin="audio" frame="0.1s"/>
+		</consumer>
+	</gate>
+	
+	<!-- event output -->
+	<object create="FileEventWriter" path="emovoice">
+		<listen address="emotion@audio"/>
+	</object>
+
+	<!-- # A photoplethysmogram (PPG) sensor
+	-->	
+
+	<!--
+	<sensor create="Audio" option="audio" sr="44100" script="video" blockInSamples="512">
+		<output channel="audio" pin="audio"/>
+	</sensor>
+	-->
+	
+	<sensor create="Camera" option="camera" fps="25.0" script="video" flip="true">
+		<output channel="video" pin="video" size="2.0s"/>
+	</sensor>	
+
+	<sensor create="PythonSensor" script="gsr" block="0.1">
+		<output channel="gsr" pin="gsr"/>		
+	</sensor>
+	
+	<sensor create="PythonSensor" script="ppg" block="0.1">
+		<output channel="ppg" pin="ppg" watch="4.0s"/>		
+	</sensor>
+
+	<sensor create="PythonSensor" script="eeg" block="0.01">
+		<output channel="eeg" pin="eeg" watch="4.0s"/>		
+	</sensor>
+
+	<consumer create="FFMPEGWriter:write" path="$(date)\audio_$(num,2).m4a" overwrite="false">
+		<input pin="audio" frame="512"/>		
+	</consumer>
+	
+	<consumer create="FFMPEGWriter:write" path="$(date)\video_$(num,2).mp4" overwrite="false">
+		<input pin="video;audio" frame="1"/>		
+	</consumer>	
+	<!---->	
+	
+	<!-- # Visualization 	
+	
+	Finally, we would like to visualize the PPG signal. Although, it is generated with a Python script, we can of course process it in the usual way.	
+	
+	-->
+
+	<!--
+	<consumer create="SignalPainter:paint" title="AUDIO" size="10" type="2">
+		<input pin="audio" frame="512"/>
+	</consumer>
+	-->
+	
+	<consumer create="VideoPainter:paint" title="VIDEO" flip="false">
+		<input pin="video" frame="1"/>
+	</consumer>	
+	
+	
+	<consumer create="SignalPainter:plot" title="GSR" size="10.0" autoscale="true">
+		<input pin="gsr" frame="0.2s"/>		
+	</consumer>	
+	
+	<consumer create="SignalPainter:plot" title="PPG" size="10.0" autoscale="true">
+		<input pin="ppg" frame="0.2s"/>		
+	</consumer>	
+
+	<consumer create="SignalPainter:plot" title="EEG" size="10.0" autoscale="true">
+		<input pin="eeg" frame="0.01s"/>		
+	</consumer>			
+
+	
+	<!-- decoration -->
+	<object create="Decorator" icon="true" title="Pipeline">
+		<area pos="0,0,400,600">console</area>
+		<area pos="400,0,800,300">eplot*</area>
+		<area pos="400,300,400,300">plot*</area>		
+		<area pos="800,300,400,300">monitor*</area>
+	</object>	
+	
+</pipeline>
+
+
+<?xml version="1.0"?>
+
+
+	
+
+
+
